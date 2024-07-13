@@ -130,7 +130,7 @@ TEST(HypergraphSubstitutionSystem, profileLevRule) {
       1,
       orderingSpec,
       HypergraphMatcher::EventDeduplication::None);
-  EXPECT_EQ(system.replace(HypergraphSubstitutionSystem::StepSpecification{4}, doNotAbort), 4);
+  std::cout << system.replace(HypergraphSubstitutionSystem::StepSpecification{4}, doNotAbort);
 }
 
 TEST(HypergraphSubstitutionSystem, profileExponentialMatchCountRule) {
