@@ -65,6 +65,27 @@ TEST(HypergraphSubstitutionSystem, profileLargeRule) {
   EXPECT_EQ(system.replace(HypergraphSubstitutionSystem::StepSpecification{4}, doNotAbort), 4);
 }
 
+TEST(HypergraphSubstitutionSystem, profileLargerRule) {
+  HypergraphSubstitutionSystem system({{{{-1, -2}, {-2, -1}, {-1, -3}, {-2, -3}, {-3, -1}, {-3, -2}},
+                                        {{-1, -2},
+                                         {-2, -1},
+                                         {-1, -3},
+                                         {-2, -3},
+                                         {-3, -1},
+                                         {-3, -2},
+                                         {-1, -4},
+                                         {-2, -4},
+                                         {-3, -4},
+                                         {-4, -1},
+                                         {-4, -2},
+                                         {-4, -3}}}},
+                                      {{1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}},
+                                      1,
+                                      orderingSpec,
+                                      HypergraphMatcher::EventDeduplication::None);
+  EXPECT_EQ(system.replace(HypergraphSubstitutionSystem::StepSpecification{4}, doNotAbort), 4);
+}
+
 TEST(HypergraphSubstitutionSystem, profileExponentialMatchCountRule) {
   HypergraphSubstitutionSystem system({{{{-1}, {-1}, {-1}}, {{-1}, {-1}, {-1}, {-1}}}},
                                       {{1}, {1}, {1}},
