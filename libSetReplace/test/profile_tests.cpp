@@ -79,7 +79,7 @@ TEST(HypergraphSubstitutionSystem, profileLargerRule) {
                                          {-4, -1},
                                          {-4, -2},
                                          {-4, -3}}}},
-                                      {{1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}},
+                                      {{1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}},
                                       1,
                                       orderingSpec,
                                       HypergraphMatcher::EventDeduplication::None);
