@@ -22,9 +22,6 @@
 namespace SetReplace {
 namespace {
 
-const size_t MAXN = 1e7;
-TokenID global_a[MAXN], global_b[MAXN];
-
 class MatchComparator {
  private:
   const HypergraphMatcher::OrderingSpec orderingSpec_;
@@ -85,20 +82,9 @@ class MatchComparator {
   }
 
   static int compareSortedIDs(const MatchPtr& a, const MatchPtr& b, const bool reverseOrder) {
-    size_t n = a->inputTokens.size();
-    size_t m = b->inputTokens.size();
-    assert(n < MAXN && m < MAXN);
-    std::copy_n(a->inputTokens.begin(), n, global_a);
-    std::copy_n(b->inputTokens.begin(), m, global_b);
-
-    if (!reverseOrder) {
-      std::sort(global_a, global_a + n, std::less<>());
-      std::sort(global_b, global_b + m, std::less<>());
-    } else {
-      std::sort(global_a, global_a + n, std::greater<>());
-      std::sort(global_b, global_b + m, std::greater<>());
-    }
-    auto result = std::lexicographical_compare_three_way(global_a, global_a + n, global_b, global_b + m);
+    const std::vector<TokenID> &x = a->inputTokens;
+    const std::vector<TokenID> &y = b->inputTokens;
+    auto result = std::lexicographical_compare_three_way(x.begin(), x.end(), y.begin(), y.end());
     if (result < 0) {
       return -1;
     } else if (result > 0) {
