@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <atomic>
+#include <cassert>
 #include <functional>
 #include <limits>
 #include <map>
@@ -20,6 +21,10 @@
 
 namespace SetReplace {
 namespace {
+
+const size_t MAXN = 1e7;
+TokenID global_a[MAXN], global_b[MAXN];
+
 class MatchComparator {
  private:
   const HypergraphMatcher::OrderingSpec orderingSpec_;
@@ -80,17 +85,27 @@ class MatchComparator {
   }
 
   static int compareSortedIDs(const MatchPtr& a, const MatchPtr& b, const bool reverseOrder) {
-    std::vector<TokenID> aTokens(a->inputTokens.begin(), a->inputTokens.end());
-    std::vector<TokenID> bTokens(b->inputTokens.begin(), b->inputTokens.end());
+    size_t n = a->inputTokens.size();
+    size_t m = b->inputTokens.size();
+    assert(n < MAXN && m < MAXN);
+    std::copy_n(a->inputTokens.begin(), n, global_a);
+    std::copy_n(b->inputTokens.begin(), m, global_b);
 
     if (!reverseOrder) {
-      std::sort(aTokens.begin(), aTokens.end(), std::less<>());
-      std::sort(bTokens.begin(), bTokens.end(), std::less<>());
+      std::sort(global_a, global_a + n, std::less<>());
+      std::sort(global_b, global_b + m, std::less<>());
     } else {
-      std::sort(aTokens.begin(), aTokens.end(), std::greater<>());
-      std::sort(bTokens.begin(), bTokens.end(), std::greater<>());
+      std::sort(global_a, global_a + n, std::greater<>());
+      std::sort(global_b, global_b + m, std::greater<>());
     }
-    return compareVectors(aTokens, bTokens);
+    auto result = std::lexicographical_compare_three_way(global_a, global_a + n, global_b, global_b + m);
+    if (result < 0) {
+      return -1;
+    } else if (result > 0) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
   static int compareUnsortedIDs(const MatchPtr& a, const MatchPtr& b) {
