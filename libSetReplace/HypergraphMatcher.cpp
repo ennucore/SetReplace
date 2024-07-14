@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "Parallelism.hpp"
+#include "subgraphMatching/convert.h"
 
 namespace SetReplace {
 namespace {
@@ -338,12 +339,44 @@ class HypergraphMatcher::Implementation {
                          const RuleID& ruleID,
                          const std::function<bool()>& shouldAbort,
                          const MatchStorage matchStorage) {
-    const auto& ruleInputTokens = rules_[ruleID].inputs;
-    for (size_t i = 0; i < ruleInputTokens.size(); ++i) {
-      const Match emptyMatch{ruleID, std::vector<TokenID>(ruleInputTokens.size(), -1)};
-      completeMatchesStartingWithInput(
-          emptyMatch, ruleInputTokens, rules_[ruleID].eventSelectionFunction, i, tokenIDs, shouldAbort, matchStorage);
+    std::vector<AtomsVector> tokenAtoms;
+    tokenAtoms.reserve(tokenIDs.size());
+    for (const auto& tokenID : tokenIDs) {
+      auto avec = getAtomsVector_(tokenID);
+      std::pair<int, int> apair = make_pair(avec[0], avec[1]);
+      tokenAtoms.push_back(apair);
     }
+    const auto& ruleInputTokens = rules_[ruleID].inputs;
+    std::vector<std::pair<int, int>> ruleInputVals;
+    ruleInputVals.reserve(ruleInputTokens.size());
+    for (const auto& tokenID : ruleInputTokens) {
+      auto avec = getAtomsVector_(tokenID);
+      std::pair<int, int> apair = make_pair(avec[0], avec[1]);
+      ruleInputVals.push_back(apair);
+    }
+    std::ofstream graphfile("graphfile.txt");
+    std::set<int> s;
+    for (const auto& token : ruleInputVals) {
+      s.insert(token.first);
+      s.insert(token.second);
+    }
+    std::vector<int> verticesUnique(s.begin(), s.end());
+    // for (const auto& vertex : verticesUnique) {
+    //   graphfile << "v " << vertex << " " << vertex << std::endl;
+    // }
+    
+    // for (const auto& token : tokenAtoms) {
+    //   graphfile << "e " << token.first << " " << token.second << " 1" << std::endl;
+    // }
+    STMatch::Graph g = STMatch::convert_to_arrays(tokenAtoms);
+
+
+
+    
+    Match m;
+    m.rule = ruleID;
+    insertMatch(std::make_shared<Match>(m));
+    //         output: insertMatch(std::make_shared<Match>(newMatch));
   }
 
   void completeMatchesStartingWithInput(const Match& incompleteMatch,
