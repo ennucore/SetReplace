@@ -83,12 +83,12 @@ TEST(HypergraphSubstitutionSystem, profileLargerRule) {
                                       1,
                                       orderingSpec,
                                       HypergraphMatcher::EventDeduplication::None);
-  EXPECT_EQ(system.replace(HypergraphSubstitutionSystem::StepSpecification{4}, doNotAbort), 4);
+  EXPECT_EQ(system.replace(HypergraphSubstitutionSystem::StepSpecification{40}, doNotAbort), 40);
 }
 
 TEST(HypergraphSubstitutionSystem, profileLevRule) {
   HypergraphSubstitutionSystem system(
-      {{{{1, 2}, {1, 3}, {2, 4}}, {{3, 4}, {3, 1}, {4, 2}}}},
+      {{{{-1, -2}, {-1, -3}, {-2, -4}}, {{-3, -4}, {-3, -1}, {-4, -2}}}},
       {{1, 2},     {1, 3},     {2, 4},     {3, 5},     {4, 6},     {4, 7},     {6, 8},     {5, 7},     {5, 9},
        {7, 10},    {8, 11},    {8, 12},    {11, 13},   {9, 14},    {10, 12},   {10, 15},   {12, 16},   {13, 17},
        {13, 18},   {17, 19},   {14, 15},   {14, 20},   {15, 21},   {16, 18},   {16, 22},   {18, 23},   {19, 24},
