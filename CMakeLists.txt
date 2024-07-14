@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 project(SetReplace
     VERSION 0.3.0
-    LANGUAGES CXX)
+    LANGUAGES CXX CUDA)  # Add CUDA to the LANGUAGES
+
 message(STATUS "${PROJECT_NAME} version: ${PROJECT_VERSION}")
 
 option(SET_REPLACE_BUILD_TESTING "Enable cpp testing." ON)
@@ -71,6 +72,7 @@ set(libSetReplace_sources
     HypergraphMatcher.cpp
     HypergraphSubstitutionSystem.cpp
     WolframLanguageAPI.cpp
+    subgraphMatching/gpu_match.cu  # Add CUDA source file here
     )
 list(TRANSFORM libSetReplace_headers PREPEND "libSetReplace/")
 list(TRANSFORM libSetReplace_sources PREPEND "libSetReplace/")
@@ -178,3 +180,4 @@ add_custom_target(set-replace-install-runtime
   )
 message(STATUS "SET_REPLACE_LIBRARIES: ${SET_REPLACE_LIBRARIES}")
 add_dependencies(set-replace-install-runtime ${SET_REPLACE_LIBRARIES})
+
